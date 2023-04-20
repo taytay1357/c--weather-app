@@ -1,4 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using WeatherApp.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<WeatherAppContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("WeatherAppContext") ?? throw new InvalidOperationException("Connection string 'WeatherAppContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
