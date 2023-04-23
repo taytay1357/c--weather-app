@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WeatherApp.Data;
 using WeatherApp.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace WeatherApp.Controllers
 {
@@ -56,10 +57,16 @@ namespace WeatherApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Password,PasswordSalt,Username,Email,DateCreated")] User user)
+        public async Task<IActionResult> Create([Bind($"Id,FirstName,LastName,Password,PasswordSalt,Username,Email,DateCreated")] User user)
         {
             if (ModelState.IsValid)
             {
+                DateTime newDate = DateTime.Now;
+                user.DateCreated = newDate;
+                if (user.Password != "" || user.Password != null)
+                {
+                    
+                }
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -13,4 +13,5 @@ public class User
     public string? Email { get; set; }
     [DataType(DataType.Date)]
     public DateTime DateCreated { get; set; }
+    public string? Location {get; set;}
 }
