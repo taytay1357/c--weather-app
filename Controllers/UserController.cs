@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WeatherApp.Data;
 using WeatherApp.Models;
 using System.ComponentModel.DataAnnotations;
+using WeatherApp.Helpers;
 
 namespace WeatherApp.Controllers
 {
@@ -65,8 +67,14 @@ namespace WeatherApp.Controllers
                 user.DateCreated = newDate;
                 if (user.Password != "" || user.Password != null)
                 {
-                    
+                    var pass = new PasswordHelpers(user.Password);
+                    var salt = pass.GenerateSalt();
+                    Console.WriteLine(salt);
+                    var hashedPassword = pass.HashPassword(Encoding.UTF8.GetBytes(salt));
+                    user.Password = hashedPassword;
+                    user.PasswordSalt = salt;
                 }
+                Console.WriteLine(user);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
